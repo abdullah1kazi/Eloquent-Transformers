@@ -1,14 +1,13 @@
 """SQLAlchemy implementation of audio repository."""
 
 from datetime import datetime, timedelta
-from typing import List, Optional, Tuple
 from uuid import UUID
 
-from sqlalchemy import select, or_
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from ...domain.entities.audio import Audio, Transcription, AudioStatus
+from ...domain.entities.audio import Audio, AudioStatus, Transcription
 from ...domain.repositories.audio_repository import IAudioRepository
 from ...domain.value_objects.audio_metadata import AudioFormat, AudioMetadata
 from ...domain.value_objects.identifiers import AudioId, TranscriptionId, UserId
@@ -45,7 +44,7 @@ class AudioRepositoryImpl(IAudioRepository):
 
         await self._session.commit()
 
-    async def find_by_id(self, audio_id: AudioId) -> Optional[Audio]:
+    async def find_by_id(self, audio_id: AudioId) -> Audio | None:
         """Find audio by ID with eager loading."""
         stmt = (
             select(AudioModel)
@@ -60,7 +59,7 @@ class AudioRepositoryImpl(IAudioRepository):
 
     async def find_by_user(
         self, user_id: UserId, limit: int = 100, offset: int = 0
-    ) -> List[Audio]:
+    ) -> list[Audio]:
         """Find all audio files for a user."""
         stmt = (
             select(AudioModel)
@@ -87,8 +86,8 @@ class AudioRepositoryImpl(IAudioRepository):
             await self._session.commit()
 
     async def search_by_text(
-        self, query: str, limit: int = 10, user_id: Optional[UserId] = None
-    ) -> List[Audio]:
+        self, query: str, limit: int = 10, user_id: UserId | None = None
+    ) -> list[Audio]:
         """Full-text search on transcriptions."""
         # Use PostgreSQL full-text search
         stmt = (
@@ -108,8 +107,8 @@ class AudioRepositoryImpl(IAudioRepository):
         return [self._map_to_entity(model) for model in models]
 
     async def search_by_embedding(
-        self, embedding: List[float], limit: int = 10, user_id: Optional[UserId] = None
-    ) -> List[Tuple[Audio, float]]:
+        self, embedding: list[float], limit: int = 10, user_id: UserId | None = None
+    ) -> list[tuple[Audio, float]]:
         """
         Semantic search using embedding similarity.
 

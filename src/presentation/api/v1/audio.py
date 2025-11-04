@@ -1,7 +1,5 @@
 """Audio API endpoints."""
 
-from typing import List
-
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -165,7 +163,7 @@ async def get_audio(
 
 @router.get(
     "/",
-    response_model=List[AudioDetailResponse],
+    response_model=list[AudioDetailResponse],
     summary="List user's audio files",
     description="Get list of audio files uploaded by the user",
 )
@@ -173,7 +171,7 @@ async def list_audios(
     limit: int = 100,
     offset: int = 0,
     handler: ListUserAudiosQueryHandler = Depends(get_list_audios_handler),
-) -> List[AudioDetailResponse]:
+) -> list[AudioDetailResponse]:
     """List user's audio files."""
     # TODO: Get user ID from authentication token
     user_id = "00000000-0000-0000-0000-000000000000"  # Placeholder

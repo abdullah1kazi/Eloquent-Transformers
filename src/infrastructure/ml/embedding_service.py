@@ -1,7 +1,6 @@
 """Semantic embedding generation using sentence transformers."""
 
 import asyncio
-from typing import List
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
@@ -29,7 +28,7 @@ class EmbeddingService:
             )
             self._model.to(self._device)
 
-    async def generate_embedding(self, text: str) -> List[float]:
+    async def generate_embedding(self, text: str) -> list[float]:
         """Generate embedding vector for text."""
         await self._load_model()
 
@@ -41,7 +40,7 @@ class EmbeddingService:
 
         return embedding.tolist()
 
-    async def generate_batch_embeddings(self, texts: List[str]) -> List[List[float]]:
+    async def generate_batch_embeddings(self, texts: list[str]) -> list[list[float]]:
         """Generate embeddings for multiple texts (more efficient)."""
         await self._load_model()
 
@@ -53,7 +52,7 @@ class EmbeddingService:
 
         return embeddings.tolist()
 
-    async def compute_similarity(self, embedding1: List[float], embedding2: List[float]) -> float:
+    async def compute_similarity(self, embedding1: list[float], embedding2: list[float]) -> float:
         """Compute cosine similarity between two embeddings."""
         vec1 = np.array(embedding1)
         vec2 = np.array(embedding2)
