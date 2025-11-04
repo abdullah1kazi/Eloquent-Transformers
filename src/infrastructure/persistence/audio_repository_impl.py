@@ -1,7 +1,7 @@
 """SQLAlchemy implementation of audio repository."""
 
-from datetime import datetime
-from typing import List, Optional
+from datetime import datetime, timedelta
+from typing import List, Optional, Tuple
 from uuid import UUID
 
 from sqlalchemy import select, or_
@@ -13,7 +13,6 @@ from ...domain.repositories.audio_repository import IAudioRepository
 from ...domain.value_objects.audio_metadata import AudioFormat, AudioMetadata
 from ...domain.value_objects.identifiers import AudioId, TranscriptionId, UserId
 from .models import AudioModel, TranscriptionModel
-from datetime import timedelta
 
 
 class AudioRepositoryImpl(IAudioRepository):
@@ -110,7 +109,7 @@ class AudioRepositoryImpl(IAudioRepository):
 
     async def search_by_embedding(
         self, embedding: List[float], limit: int = 10, user_id: Optional[UserId] = None
-    ) -> List[tuple[Audio, float]]:
+    ) -> List[Tuple[Audio, float]]:
         """
         Semantic search using embedding similarity.
 
@@ -121,7 +120,8 @@ class AudioRepositoryImpl(IAudioRepository):
 
         # Fetch all audios with embeddings
         stmt = select(AudioModel).where(
-            AudioModel.embedding_vector.isnot(None), AudioModel.status == AudioStatus.INDEXED.value
+            AudioModel.embedding_vector.isnot(None),
+            AudioModel.status == AudioStatus.INDEXED.value,
         )
 
         if user_id:

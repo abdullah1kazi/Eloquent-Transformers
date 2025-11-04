@@ -56,7 +56,9 @@ limiter = Limiter(key_func=get_remote_address)
     },
 )
 async def upload_audio(
-    file: UploadFile = File(..., description="Audio file (mp3, wav, flac, m4a, ogg, opus)"),
+    file: UploadFile = File(
+        ..., description="Audio file (mp3, wav, flac, m4a, ogg, opus)"
+    ),
     handler: UploadAudioCommandHandler = Depends(get_upload_audio_handler),
 ) -> AudioUploadResponse:
     """

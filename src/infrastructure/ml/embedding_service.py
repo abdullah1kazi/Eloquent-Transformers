@@ -47,7 +47,8 @@ class EmbeddingService:
 
         loop = asyncio.get_event_loop()
         embeddings = await loop.run_in_executor(
-            None, lambda: self._model.encode(texts, convert_to_numpy=True, show_progress_bar=False)
+            None,
+            lambda: self._model.encode(texts, convert_to_numpy=True, show_progress_bar=False),
         )
 
         return embeddings.tolist()

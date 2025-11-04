@@ -1,7 +1,7 @@
 """Audio repository interface."""
 
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from ..entities.audio import Audio
 from ..value_objects.identifiers import AudioId, UserId
@@ -42,6 +42,6 @@ class IAudioRepository(ABC):
     @abstractmethod
     async def search_by_embedding(
         self, embedding: List[float], limit: int = 10, user_id: Optional[UserId] = None
-    ) -> List[tuple[Audio, float]]:
+    ) -> List[Tuple[Audio, float]]:
         """Semantic search using embedding similarity."""
         pass
